@@ -24,7 +24,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+// JLS Spring 5
+// import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.SpringApplicationContextLoader;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ActiveProfiles;
@@ -57,20 +59,20 @@ import static org.hamcrest.Matchers.isA;
 @ActiveProfiles("test")
 public class QuoteServiceTest {
 	MockMvc mockMvc;
-	
+
 	@InjectMocks
 	@Autowired
 	QuoteService service;
-	
+
 	@Mock
 	RestTemplate restTemplate;
-	
+
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 
 	    this.mockMvc = MockMvcBuilders.standaloneSetup(service).build();
-	    
+
 	}
 	/**
 	 * Tests retrieving a quote from the external service.
@@ -88,7 +90,7 @@ public class QuoteServiceTest {
 	 */
 	@Rule
     public ExpectedException thrown = ExpectedException.none();
-	
+
 	@Test
 	public void getNullQuote() throws Exception{
 		//thrown.expect(com.netflix.hystrix.exception.HystrixRuntimeException.class);
@@ -96,7 +98,7 @@ public class QuoteServiceTest {
 		Quote quote = service.getQuote(TestConfiguration.NULL_QUOTE_SYMBOL);
 		assertEquals(quote.getStatus(),"FAILED");
 	}
-	
+
 	/**
 	 * tests retrieving company information from external service.
 	 * @throws Exception
@@ -122,7 +124,7 @@ public class QuoteServiceTest {
 		List<CompanyInfo> comps = service.getCompanyInfo(TestConfiguration.NULL_QUOTE_SYMBOL);
 		assertTrue(comps.isEmpty());
 	}
-	
+
 	/**
 	 * test yahoo service with multiple quotes
 	 * @throws Exception
@@ -133,12 +135,12 @@ public class QuoteServiceTest {
 		assertNotNull("should have 2 quotes",quotes);
 		assertEquals("should have 2 quotes",quotes.size(), 2);
 	}
-	
+
 	/**
 	 * test yahoo service with one quote.
 	 * Yahoo does not wrap quote in json array so deserialization fails. Once this works we can
 	 * make this the main quote retrieval service, and the others as fallbacks.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected=org.springframework.http.converter.HttpMessageNotReadableException.class)
@@ -148,4 +150,3 @@ public class QuoteServiceTest {
 		assertEquals("should have 1 quotes",quotes.size(), 1);
 	}
 }
-
