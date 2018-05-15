@@ -54,7 +54,7 @@ import static org.hamcrest.Matchers.isA;
 //@ContextConfiguration(initializers=ConfigFileApplicationContextInitializer.class)
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = QuotesApplication.class)
+@SpringBootTest(classes = QuotesApplication.class)
 @TestPropertySource(locations="classpath:application-test.yml")
 @ActiveProfiles("test")
 public class QuoteServiceTest {
